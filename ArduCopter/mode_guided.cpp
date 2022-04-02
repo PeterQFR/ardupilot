@@ -635,7 +635,6 @@ void ModeGuided::set_angle(const Quaternion &attitude_quat, const Vector3f &ang_
     // convert quaternion to euler angles
     float roll_rad, pitch_rad, yaw_rad;
     attitude_quat.to_euler(roll_rad, pitch_rad, yaw_rad);
-
     // log target
     copter.Log_Write_Guided_Attitude_Target(guided_mode, roll_rad, pitch_rad, yaw_rad, ang_vel, guided_angle_state.thrust, guided_angle_state.climb_rate_cms * 0.01);
 }
@@ -1030,7 +1029,11 @@ void ModeGuided::angle_control_run()
     if (guided_angle_state.attitude_quat.is_zero()) {
         attitude_control->input_rate_bf_roll_pitch_yaw(ToDeg(guided_angle_state.ang_vel.x) * 100.0f, ToDeg(guided_angle_state.ang_vel.y) * 100.0f, ToDeg(guided_angle_state.ang_vel.z) * 100.0f);
     } else {
-        attitude_control->input_quaternion(guided_angle_state.attitude_quat, guided_angle_state.ang_vel);
+        float roll_rad, pitch_rad, yaw_rad;
+        guided_angle_state.attitude_quat.to_euler(roll_rad, pitch_rad, yaw_rad);
+        attitude_control->input_euler_angle_roll_pitch_euler_rate_yaw(ToDeg(roll_rad)*100.f, ToDeg(pitch_rad)*100.0f, ToDeg(guided_angle_state.ang_vel.z)*100.0f);
+        GCS_SEND_TEXT(MAV_SEVERITY_WARNING, "R %.2f, P  %.2f YR %.2f, yrcds %f \n", roll_rad, pitch_rad, guided_angle_state.ang_vel.z, guided_angle_state.yaw_rate_cds );
+        //attitude_control->input_quaternion(guided_angle_state.attitude_quat, guided_angle_state.ang_vel);
     }
 
     // call position controller
