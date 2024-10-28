@@ -119,7 +119,7 @@ static Motor hexa_dji_x_motors[] =
     Motor(AP_MOTORS_MOT_6,   90, AP_MOTORS_MATRIX_YAW_FACTOR_CW,  2)
 };
 
-static Motor hexa_cw_x_motors[] = 
+static Motor hexa_cw_x_motors[] =
 {
     Motor(AP_MOTORS_MOT_1,   30, AP_MOTORS_MATRIX_YAW_FACTOR_CCW, 1),
     Motor(AP_MOTORS_MOT_2,   90, AP_MOTORS_MATRIX_YAW_FACTOR_CW,  2),
@@ -153,7 +153,7 @@ static Motor octa_dji_x_motors[] =
     Motor(AP_MOTORS_MOT_8,   67.5f, AP_MOTORS_MATRIX_YAW_FACTOR_CW,  2)
 };
 
-static Motor octa_cw_x_motors[] = 
+static Motor octa_cw_x_motors[] =
 {
     Motor(AP_MOTORS_MOT_1,   22.5f, AP_MOTORS_MATRIX_YAW_FACTOR_CCW, 1),
     Motor(AP_MOTORS_MOT_2,   67.5f, AP_MOTORS_MATRIX_YAW_FACTOR_CW,  2),
@@ -356,7 +356,7 @@ void Frame::load_frame_params(const char *model_json)
         void *ptr;
         VarType t;
     };
-    
+
     json_search vars[] = {
 #define FRAME_VAR(s) { #s, &model.s, VarType::FLOAT }
         FRAME_VAR(mass),
@@ -495,7 +495,7 @@ void Frame::init(const char *frame_str, Battery *_battery)
     // power_factor is ratio of power consumed per newton of thrust
     float power_factor = hover_power / hover_thrust;
 
-    battery->setup(model.battCapacityAh, model.refBatRes, model.maxVoltage);
+    battery->setup(model.battCapacityAh, model.refBatRes, model.maxVoltage, 1.);
 
     if (uint8_t(model.num_motors) != num_motors) {
         ::printf("Warning model expected %u motors and got %u\n", uint8_t(model.num_motors), num_motors);

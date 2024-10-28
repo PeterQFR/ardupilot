@@ -27,7 +27,7 @@ namespace SITL {
  */
 class Battery {
 public:
-    void setup(float _capacity_Ah, float _resistance, float _max_voltage);
+    void setup(float _capacity_Ah, float _resistance, float _max_voltage, float cell_no);
 
     void init_voltage(float voltage);
 
@@ -38,6 +38,7 @@ private:
     float capacity_Ah;
     float resistance;
     float max_voltage;
+    float cell_no;
     float voltage_set;
     float remaining_Ah;
     uint64_t last_us;

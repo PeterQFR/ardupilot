@@ -24,6 +24,7 @@
 
 #include <AP_HAL/utility/Socket.h>
 #include "SIM_Aircraft.h"
+#include "SIM_Battery.h"
 
 namespace SITL {
 
@@ -65,7 +66,7 @@ private:
     uint16_t control_port = 9002;
 
     SocketAPM sock;
-
+    Battery battery_;
     uint32_t frame_counter;
     double last_timestamp_s;
 

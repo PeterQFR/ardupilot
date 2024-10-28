@@ -94,6 +94,7 @@ float Battery::get_resting_voltage(float charge_pct) const
  */
 void Battery::set_initial_SoC(float voltage)
 {
+    voltage /=cell_no;
     const float max_cell_voltage = soc_table[0].volt_per_cell;
     float cell_volt = (voltage / max_voltage) * max_cell_voltage;
 
@@ -114,15 +115,17 @@ void Battery::set_initial_SoC(float voltage)
     remaining_Ah = 0;
 }
 
-void Battery::setup(float _capacity_Ah, float _resistance, float _max_voltage)
+void Battery::setup(float _capacity_Ah, float _resistance, float _max_voltage, float _cell_no)
 {
     capacity_Ah = _capacity_Ah;
     resistance = _resistance;
-    max_voltage = _max_voltage;
+    max_voltage = _max_voltage/_cell_no;
+    cell_no = _cell_no;
 }
 
 void Battery::init_voltage(float voltage)
 {
+    voltage /= cell_no;
     voltage_filter.reset(voltage);
     voltage_set = voltage;
     set_initial_SoC(voltage);
@@ -130,6 +133,7 @@ void Battery::init_voltage(float voltage)
 
 void Battery::set_current(float current)
 {
+    current /=cell_no;
     uint64_t now = AP_HAL::micros64();
     float dt = (now - last_us) * 1.0e-6;
     if (dt > 0.1) {
@@ -154,5 +158,5 @@ void Battery::set_current(float current)
 
 float Battery::get_voltage(void) const
 {
-    return voltage_filter.get();
+    return voltage_filter.get()*cell_no;
 }
