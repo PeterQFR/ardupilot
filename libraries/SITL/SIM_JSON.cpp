@@ -311,7 +311,7 @@ void JSON::recv_fdm(const struct sitl_input &input)
         servo += (input.servos[i]-1000) / 1000.0f;
 
     }
-    float current = servo * 6.0 + 0.5; // Current in Amps
+    float current = servo * 8.0 + 0.5; // Current in Amps
     //battery.set_current(current);
     battery_current = current;
     battery_voltage -= current*0.000000001;
