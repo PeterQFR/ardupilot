@@ -26,6 +26,7 @@
 #include <AP_Param/AP_Param.h>
 #include <AP_Common/Location.h>
 #include <AP_NavEKF/AP_Nav_Common.h>
+#include <AP_GPS/AP_GPS_FixType.h>
 
 class AP_ExternalAHRS_backend;
 
@@ -119,6 +120,7 @@ public:
     bool get_gyro(Vector3f &gyro);
     bool get_accel(Vector3f &accel);
     void send_status_report(class GCS_MAVLINK &link) const;
+    bool get_variances(float &velVar, float &posVar, float &hgtVar, Vector3f &magVar, float &tasVar) const;
 
     // update backend
     void update();
@@ -137,9 +139,9 @@ public:
     } mag_data_message_t;
 
     typedef struct {
-        uint16_t gps_week;                   // GPS week, 0xFFFF if not available
+        uint16_t gps_week;
         uint32_t ms_tow;
-        uint8_t  fix_type;
+        AP_GPS_FixType  fix_type;
         uint8_t  satellites_in_view;
         float horizontal_pos_accuracy;
         float vertical_pos_accuracy;
