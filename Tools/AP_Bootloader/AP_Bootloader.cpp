@@ -77,7 +77,7 @@ int main(void)
 #if defined(STM32H7) && CH_CFG_USE_HEAP
     check_ecc_errors();
 #endif
-    
+    led_set(LED_BLINK);
 #ifdef STM32F427xx
     if (BOARD_FLASH_SIZE > 1024 && check_limit_flash_1M()) {
         board_info.fw_size = (1024 - (FLASH_BOOTLOADER_LOAD_KB + APP_START_OFFSET_KB))*1024;
