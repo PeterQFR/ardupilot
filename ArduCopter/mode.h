@@ -1088,7 +1088,9 @@ public:
     // climb_rate_cms_or_thrust: represents either the climb_rate (cm/s) or thrust scaled from [0, 1], unitless
     // use_thrust: IF true: climb_rate_cms_or_thrust represents thrust
     //             IF false: climb_rate_cms_or_thrust represents climb_rate (cm/s)
-    void set_angle(const Quaternion &attitude_quat, const Vector3f &ang_vel, float climb_rate_cms_or_thrust, bool use_thrust);
+    // use_body_roll_pitch_angle_yaw_rate: If true: specify quaternion only pitch and roll will be used in a body centric way, Yaw rate will be used. Yaw angle is discarded.
+    //              IF false: the attitude quaternion will be used and vehicle will attempt to attain this attitude including yaw as the vehicle sees it.
+    void set_angle(const Quaternion &attitude_quat, const Vector3f &ang_vel, float climb_rate_cms_or_thrust, bool use_thrust, bool use_body_roll_pitch_angle_yaw_rate=false);
 
     bool set_destination(const Vector3f& destination, bool use_yaw = false, float yaw_cd = 0.0, bool use_yaw_rate = false, float yaw_rate_cds = 0.0, bool yaw_relative = false, bool terrain_alt = false);
     bool set_destination(const Location& dest_loc, bool use_yaw = false, float yaw_cd = 0.0, bool use_yaw_rate = false, float yaw_rate_cds = 0.0, bool yaw_relative = false);
@@ -1116,7 +1118,7 @@ public:
     bool limit_check();
 
     bool is_taking_off() const override;
-    
+
     bool set_speed_xy(float speed_xy_cms) override;
     bool set_speed_up(float speed_up_cms) override;
     bool set_speed_down(float speed_down_cms) override;
@@ -1916,7 +1918,7 @@ protected:
 };
 #endif
 
-class ModeZigZag : public Mode {        
+class ModeZigZag : public Mode {
 
 public:
     ModeZigZag(void);

@@ -25,6 +25,7 @@
 
 namespace SITL {
 
+extern const AP_HAL::HAL& hal;
 Gazebo::Gazebo(const char *frame_str) :
     Aircraft(frame_str),
     last_timestamp(0),
@@ -89,6 +90,21 @@ void Gazebo::recv_fdm(const struct sitl_input &input)
             last_timestamp = 0;
         }
     }
+
+    //Calculate Battery Current
+    float servo = 0.f;
+    for (int i=0; i < 4; i++)
+    {
+        servo += (input.servos[i]-1000) / 1000.0f;
+
+    }
+    float current = servo * 26.0/0.4f + 0.5; // Current in Amps
+    battery.set_current(current);
+    battery_current = current;
+    battery_voltage = battery.get_voltage();
+
+    ::printf("Battery V: %.2f, Current %.2f: \n",
+                        battery_voltage, battery_current);
 
     const double deltat = pkt.timestamp - last_timestamp;  // in seconds
     if (deltat < 0) {  // don't use old packet
@@ -158,6 +174,7 @@ void Gazebo::drain_sockets()
  */
 void Gazebo::update(const struct sitl_input &input)
 {
+    ::printf("Running Gazebo Update");
     send_servos(input);
     recv_fdm(input);
     update_position();

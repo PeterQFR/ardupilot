@@ -187,7 +187,7 @@ void GCS_MAVLINK_Copter::send_position_target_local_ned()
     mavlink_msg_position_target_local_ned_send(
         chan,
         AP_HAL::millis(), // time boot ms
-        MAV_FRAME_LOCAL_NED, 
+        MAV_FRAME_LOCAL_NED,
         type_mask,
         target_pos.x,   // x in metres
         target_pos.y,   // y in metres
@@ -233,7 +233,7 @@ float GCS_MAVLINK_Copter::vfr_hud_airspeed() const
         return copter.airspeed.get_airspeed();
     }
 #endif
-    
+
     Vector3f airspeed_vec_bf;
     if (AP::ahrs().airspeed_vector_true(airspeed_vec_bf)) {
         // we are running the EKF3 wind estimation code which can give
@@ -1266,10 +1266,26 @@ void GCS_MAVLINK_Copter::handle_message_set_attitude_target(const mavlink_messag
             }
         }
 
-        copter.mode_guided.set_angle(attitude_quat, ang_vel_body,
-                climb_rate_or_thrust, use_thrust);
-}
+        Vector3f ang_vel;
+        if (!roll_rate_ignore) {
+            ang_vel.x = packet.body_roll_rate;
+        }
+        if (!pitch_rate_ignore) {
+            ang_vel.y = packet.body_pitch_rate;
+        }
+        if (!yaw_rate_ignore) {
+            ang_vel.z = packet.body_yaw_rate;
+        }
 
+        bool use_body_roll_pitch_angle_yaw_rate = false;
+        if (roll_rate_ignore && pitch_rate_ignore && !yaw_rate_ignore && !attitude_ignore)
+        {
+            use_body_roll_pitch_angle_yaw_rate = true;
+        }
+
+        copter.mode_guided.set_angle(attitude_quat, ang_vel,
+                climb_rate_or_thrust, use_thrust, use_body_roll_pitch_angle_yaw_rate);
+}
 void GCS_MAVLINK_Copter::handle_message_set_position_target_local_ned(const mavlink_message_t &msg)
 {
         // decode packet
@@ -1592,7 +1608,7 @@ int16_t GCS_MAVLINK_Copter::high_latency_target_altitude() const
         return 0.01 * (global_position_current.alt + copter.pos_control->get_pos_error_z_cm());
     }
     return 0;
-    
+
 }
 
 uint8_t GCS_MAVLINK_Copter::high_latency_tgt_heading() const
@@ -1603,9 +1619,9 @@ uint8_t GCS_MAVLINK_Copter::high_latency_tgt_heading() const
         // need to convert -18000->18000 to 0->360/2
         return wrap_360_cd(flightmode->wp_bearing()) / 200;
     }
-    return 0;     
+    return 0;
 }
-    
+
 uint16_t GCS_MAVLINK_Copter::high_latency_tgt_dist() const
 {
     if (copter.ap.initialised) {
@@ -1622,7 +1638,7 @@ uint8_t GCS_MAVLINK_Copter::high_latency_tgt_airspeed() const
         // return units are m/s*5
         return MIN(copter.pos_control->get_vel_target_cms().length() * 5.0e-2, UINT8_MAX);
     }
-    return 0;  
+    return 0;
 }
 
 uint8_t GCS_MAVLINK_Copter::high_latency_wind_speed() const
@@ -1634,7 +1650,7 @@ uint8_t GCS_MAVLINK_Copter::high_latency_wind_speed() const
         wind = AP::ahrs().wind_estimate();
         return wind.length() * 5;
     }
-    return 0; 
+    return 0;
 }
 
 uint8_t GCS_MAVLINK_Copter::high_latency_wind_direction() const

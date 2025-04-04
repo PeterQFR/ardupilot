@@ -12,7 +12,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-/* 
+/*
     Simulator Connector for JSON based interfaces
 */
 
@@ -78,6 +78,9 @@ JSON::JSON(const char *frame_str) :
             }
         }
     }
+    battery_voltage = 16.80;
+
+//battery.setup(4.2, 0.01, 16.80, 4.);
 }
 
 /*
@@ -302,6 +305,21 @@ void JSON::recv_fdm(const struct sitl_input &input)
     memmove(sensor_buffer, p2, sensor_buffer_len - (p2 - sensor_buffer));
     sensor_buffer_len = sensor_buffer_len - (p2 - sensor_buffer);
 
+    float servo = 0.f;
+    for (int i=0; i < 4; i++)
+    {
+        servo += (input.servos[i]-1000) / 1000.0f;
+
+    }
+    float current = servo * 8.0 + 0.5; // Current in Amps
+    //battery.set_current(current);
+    battery_current = current;
+    battery_voltage -= current*0.000000001;
+
+    battery_voltage = std::fmax(battery_voltage, 11.0f);
+
+    ::printf("Battery V: %.2f, Current %.2f Servo %.2f: \n",
+                        battery_voltage, battery_current, servo);
     accel_body = state.imu.accel_body;
     gyro = state.imu.gyro;
     velocity_ef = state.velocity;
@@ -323,9 +341,9 @@ void JSON::recv_fdm(const struct sitl_input &input)
 
         airspeed_pitot = state.airspeed;
     } else {
-        
-        // wind is not supported yet for JSON sim, assume zero for now        
-        wind_ef.zero(); 
+
+        // wind is not supported yet for JSON sim, assume zero for now
+        wind_ef.zero();
 
         // velocity relative to airmass in Earth's frame
         velocity_air_ef = velocity_ef - wind_ef;
