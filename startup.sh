@@ -1,3 +1,4 @@
+source venv/bin/activate
 ./Tools/autotest/sim_vehicle.py -v ArduCopter -f gazebo-spurt --model JSON --sim_vehicle_sh_compatible --load-module joystick --console
 
 #if joystick isn't working check the defintion in your MAVProxy directory like:

@@ -1,0 +1,5 @@
+setuptools
+dronecan
+mavproxy 
+future
+
