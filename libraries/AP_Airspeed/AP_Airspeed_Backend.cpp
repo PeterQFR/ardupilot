@@ -17,6 +17,10 @@
   backend driver class for airspeed
  */
 
+#include "AP_Airspeed_config.h"
+
+#if AP_AIRSPEED_ENABLED
+
 #include <AP_Common/AP_Common.h>
 #include <AP_HAL/AP_HAL.h>
 #include "AP_Airspeed.h"
@@ -29,11 +33,6 @@ AP_Airspeed_Backend::AP_Airspeed_Backend(AP_Airspeed &_frontend, uint8_t _instan
     instance(_instance)
 {
 }
-
-AP_Airspeed_Backend::~AP_Airspeed_Backend(void)
-{
-}
- 
 
 int8_t AP_Airspeed_Backend::get_pin(void) const
 {
@@ -54,7 +53,7 @@ uint8_t AP_Airspeed_Backend::get_bus(void) const
     return frontend.param[instance].bus;
 }
 
-bool AP_Airspeed_Backend::bus_is_confgured(void) const
+bool AP_Airspeed_Backend::bus_is_configured(void) const
 {
     return frontend.param[instance].bus.configured();
 }
@@ -63,3 +62,5 @@ void AP_Airspeed_Backend::set_bus_id(uint32_t id)
 {
     frontend.param[instance].bus_id.set_and_save(int32_t(id));
 }
+
+#endif  // AP_AIRSPEED_ENABLED

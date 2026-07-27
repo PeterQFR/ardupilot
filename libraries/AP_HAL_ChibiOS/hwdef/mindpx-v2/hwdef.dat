@@ -5,8 +5,8 @@
 # MCU class and specific type
 MCU STM32F4xx STM32F427xx
 
-# board ID for firmware load
-APJ_BOARD_ID 88
+# board ID. See Tools/AP_Bootloader/board_types.txt
+APJ_BOARD_ID TARGET_HW_MINDPX_V2
 
 # crystal frequency
 OSCILLATOR_HZ 8000000
@@ -182,9 +182,6 @@ COMPASS LSM303D SPI:lsm9ds0_am ROTATION_PITCH_180_YAW_270
 define HAL_PROBE_EXTERNAL_I2C_COMPASSES
 
 define HAL_CHIBIOS_ARCH_MINDPXV2 1
-
-define HAL_BOARD_LOG_DIRECTORY "/APM/LOGS"
-define HAL_BOARD_TERRAIN_DIRECTORY "/APM/TERRAIN"
 
 define HAL_STORAGE_SIZE 16384
 

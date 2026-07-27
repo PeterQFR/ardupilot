@@ -1,13 +1,10 @@
 #pragma once
 
-#include "AP_RangeFinder_Backend.h"
-
-#ifndef AP_RANGEFINDER_DRONECAN_ENABLED
-#define AP_RANGEFINDER_DRONECAN_ENABLED (HAL_ENABLE_DRONECAN_DRIVERS && AP_RANGEFINDER_BACKEND_DEFAULT_ENABLED)
-#endif
+#include "AP_RangeFinder_config.h"
 
 #if AP_RANGEFINDER_DRONECAN_ENABLED
 
+#include "AP_RangeFinder_Backend.h"
 #include <AP_DroneCAN/AP_DroneCAN.h>
 
 class MeasurementCb;
@@ -19,7 +16,7 @@ public:
 
     void update() override;
 
-    static void subscribe_msgs(AP_DroneCAN* ap_dronecan);
+    static bool subscribe_msgs(AP_DroneCAN* ap_dronecan);
     static AP_RangeFinder_DroneCAN* get_dronecan_backend(AP_DroneCAN* ap_dronecan, uint8_t node_id, uint8_t address, bool create_new);
     static AP_RangeFinder_Backend* detect(RangeFinder::RangeFinder_State &_state, AP_RangeFinder_Params &_params);
 

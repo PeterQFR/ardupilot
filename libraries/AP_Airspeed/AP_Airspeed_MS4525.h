@@ -14,11 +14,7 @@
  */
 #pragma once
 
-#include <AP_HAL/AP_HAL_Boards.h>
-
-#ifndef AP_AIRSPEED_MS4525_ENABLED
-#define AP_AIRSPEED_MS4525_ENABLED AP_AIRSPEED_BACKEND_DEFAULT_ENABLED
-#endif
+#include "AP_Airspeed_config.h"
 
 #if AP_AIRSPEED_MS4525_ENABLED
 
@@ -27,7 +23,6 @@
  */
 
 #include <AP_HAL/AP_HAL.h>
-#include <AP_HAL/utility/OwnPtr.h>
 #include <AP_HAL/I2CDevice.h>
 #include <utility>
 
@@ -36,9 +31,12 @@
 class AP_Airspeed_MS4525 : public AP_Airspeed_Backend
 {
 public:
-    AP_Airspeed_MS4525(AP_Airspeed &frontend, uint8_t _instance);
-    ~AP_Airspeed_MS4525(void) {}
-    
+    using AP_Airspeed_Backend::AP_Airspeed_Backend;
+
+    ~AP_Airspeed_MS4525(void) {
+        delete _dev;
+    }
+
     // probe and initialise the sensor
     bool init() override;
 
@@ -64,7 +62,7 @@ private:
     float _pressure;
     uint32_t _last_sample_time_ms;
     uint32_t _measurement_started_ms;
-    AP_HAL::OwnPtr<AP_HAL::I2CDevice> _dev;
+    AP_HAL::I2CDevice *_dev;
 
     bool probe(uint8_t bus, uint8_t address);
 };

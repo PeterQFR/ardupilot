@@ -18,6 +18,7 @@
 #include "hal.h"
 #include "usbcfg.h"
 #include "stm32_util.h"
+#include "flash.h"
 #include "watchdog.h"
 
 
@@ -268,6 +269,9 @@ void __early_init(void) {
                      STM32_NOCACHE_MPU_REGION_2_SIZE |
                      MPU_RASR_ENABLE);
 #endif
+#if defined(DUAL_CORE)
+  stm32_disable_cm4_core(); // disable second core
+#endif
 #endif
 }
 
@@ -293,6 +297,11 @@ void __late_init(void) {
 #endif
 #ifdef HAL_USB_PRODUCT_ID
   setup_usb_strings();
+#endif
+
+#ifdef HAL_FLASH_SET_NRST_MODE
+  // ensure NRST_MODE is set correctly
+  stm32_flash_set_NRST_MODE(HAL_FLASH_SET_NRST_MODE);
 #endif
 }
 
