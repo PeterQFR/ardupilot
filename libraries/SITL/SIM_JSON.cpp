@@ -316,7 +316,7 @@ void JSON::recv_fdm(const struct sitl_input &input)
     battery_current = current;
     battery_voltage -= current*0.000000001;
 
-    battery_voltage = std::max(battery_voltage, 11.0f);
+    battery_voltage = std::fmax(battery_voltage, 11.0f);
 
     ::printf("Battery V: %.2f, Current %.2f Servo %.2f: \n",
                         battery_voltage, battery_current, servo);
@@ -341,9 +341,9 @@ void JSON::recv_fdm(const struct sitl_input &input)
 
         airspeed_pitot = state.airspeed;
     } else {
-        
-        // wind is not supported yet for JSON sim, assume zero for now        
-        wind_ef.zero(); 
+
+        // wind is not supported yet for JSON sim, assume zero for now
+        wind_ef.zero();
 
         // velocity relative to airmass in Earth's frame
         velocity_air_ef = velocity_ef - wind_ef;

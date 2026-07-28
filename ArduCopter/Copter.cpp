@@ -415,7 +415,7 @@ bool Copter::set_target_rate_and_throttle(float roll_rate_dps, float pitch_rate_
     ang_vel_body *= DEG_TO_RAD;
 
     // Pass to guided mode
-    mode_guided.set_angle(q, ang_vel_body, throttle, true);
+    mode_guided.set_angle(q, ang_vel_body, throttle, true, false);
     return true;
 }
 
