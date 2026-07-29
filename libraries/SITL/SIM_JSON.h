@@ -65,7 +65,6 @@ private:
     // default connection_info_.sitl_ip_port
     uint16_t control_port = 9002;
 
-    Battery battery_;
     SocketAPM_native sock;
 
     uint32_t frame_counter;

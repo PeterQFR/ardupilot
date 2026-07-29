@@ -686,9 +686,9 @@ void ModeGuided::set_angle(const Quaternion &attitude_quat, const Vector3f &ang_
     guided_angle_state.update_time_ms = millis();
 
     // convert quaternion to euler angles
+#if HAL_LOGGING_ENABLED
     float roll_rad, pitch_rad, yaw_rad;
     attitude_quat.to_euler(roll_rad, pitch_rad, yaw_rad);
-#if HAL_LOGGING_ENABLED
     // log target
     copter.Log_Write_Guided_Attitude_Target(guided_mode, roll_rad, pitch_rad, yaw_rad, ang_vel_body, guided_angle_state.thrust, guided_angle_state.climb_rate_cms * 0.01);
 #endif

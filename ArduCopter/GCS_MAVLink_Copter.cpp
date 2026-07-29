@@ -1197,6 +1197,7 @@ bool GCS_MAVLINK_Copter::sane_vel_or_acc_vector(const Vector3f &vec) const
 #if MODE_GUIDED_ENABLED
 void GCS_MAVLINK_Copter::handle_message_set_attitude_target(const mavlink_message_t &msg)
 {
+
         // decode packet
         mavlink_set_attitude_target_t packet;
         mavlink_msg_set_attitude_target_decode(&msg, &packet);
@@ -1233,17 +1234,6 @@ void GCS_MAVLINK_Copter::handle_message_set_attitude_target(const mavlink_messag
             }
         }
 
-        Vector3f ang_vel_body;
-        if (!roll_rate_ignore && !pitch_rate_ignore && !yaw_rate_ignore) {
-            ang_vel_body.x = packet.body_roll_rate;
-            ang_vel_body.y = packet.body_pitch_rate;
-            ang_vel_body.z = packet.body_yaw_rate;
-        } else if (!(roll_rate_ignore && pitch_rate_ignore && yaw_rate_ignore)) {
-            // The body rates are ill-defined
-            // input is not valid so stop
-            copter.mode_guided.init(true);
-            return;
-        }
 
         // check if the message's thrust field should be interpreted as a climb rate or as thrust
         const bool use_thrust = copter.mode_guided.set_attitude_target_provides_thrust();

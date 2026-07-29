@@ -318,8 +318,8 @@ void JSON::recv_fdm(const struct sitl_input &input)
 
     battery_voltage = std::fmax(battery_voltage, 11.0f);
 
-    ::printf("Battery V: %.2f, Current %.2f Servo %.2f: \n",
-                        battery_voltage, battery_current, servo);
+    //::printf("Battery V: %.2f, Current %.2f Servo %.2f: \n",
+    //                    battery_voltage, battery_current, servo);
     accel_body = state.imu.accel_body;
     gyro = state.imu.gyro;
     velocity_ef = state.velocity;
