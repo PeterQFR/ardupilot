@@ -193,6 +193,9 @@ public:
     // previous and current elements are safe and do not have an impact on control.
     // Any additional functions that are added to manipulate _ang_vel_body should follow this pattern.
 
+    // Calculates the body frame angular velocities to follow the target attitude
+    // This is used by most of the subsequent functions
+    void attitude_controller_run_quat();
 
     // Command a Quaternion attitude with feedforward and smoothing
     // attitude_desired_quat: is updated on each time_step (_dt) by the integral of the body frame angular velocity
@@ -368,7 +371,7 @@ public:
     Vector3f euler_accel_limit(const Quaternion &att, const Vector3f &euler_accel);
 
     // Calculates the body frame angular velocities to follow the target attitude
-    void attitude_controller_run_quat();
+    void update_attitude_target();
 
     // thrust_heading_rotation_angles - calculates two ordered rotations to move the attitude_body quaternion to the attitude_target quaternion.
     // The maximum error in the yaw axis is limited based on the angle yaw P value and acceleration.
