@@ -971,6 +971,7 @@ void ModeGuided::angle_control_run()
             pos_control->init_z_controller();
             guided_angle_state.use_thrust = false;
         }
+        set_mode(Mode::Number::LAND, ModeReason::GCS_FAILSAFE);
     }
 
     // interpret positive climb rate or thrust as triggering take-off
